@@ -29,9 +29,11 @@ def search_images(text_query: str, top_k: int = 5):
         text_features = model.get_text_features(**text_inputs)
         text_features /= text_features.norm(dim=-1, keepdim=True)
 
-        similarities = image_features @ text_features.T  # shape (N, 1)
-        similarities = similarities.squeeze(1)
+        logit_scale = model.logit_scale.exp()
+        logits_per_image = logit_scale * (image_features @ text_features.T)  # shape (N, 1)
+        logits_per_image = logits_per_image.squeeze(1)
+        probs = logits_per_image.softmax(dim=0)
 
-        top_k_indices = similarities.topk(top_k).indices.tolist()
-        results = [(image_paths[i], similarities[i].item()) for i in top_k_indices]
+        top_k_indices = probs.topk(top_k).indices.tolist()
+        results = [(image_paths[i], probs[i].item()) for i in top_k_indices]
         return results
