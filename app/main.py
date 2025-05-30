@@ -1,6 +1,6 @@
 # app/main.py
 from fastapi import FastAPI, Query
-from app.clip_utils import search_images
+from clip import search_images
 
 app = FastAPI()
 
