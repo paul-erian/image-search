@@ -12,8 +12,20 @@
                     <h1 class="text-center my-4">Image Search</h1>
                     <form class="d-flex flex-column gap-3" action="/search" method="get">
                         <input class="form-control" type="text" name="q" placeholder="Enter your search..." required autofocus>
-                        <input class="form-control" type="number" name="k" value="5" min="1" max="20">
-                        <input class="form-control" type="number" name="t" value="0.3" min="0" max="1" step="0.05" placeholder="Threshold (0-1)">
+                        <div class="row g-2">
+                            <div class="col">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="label-k">max_results</span>
+                                    <input class="form-control" type="number" name="k" value="5" min="1" max="20" placeholder="Maximum results number (1-20)" aria-label="max_results" aria-describedby="label-k">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="label-t">threshold</span>
+                                    <input class="form-control" type="number" name="t" value="0.3" min="0" max="1" step="0.05" placeholder="Threshold (0-1)" aria-label="threshold" aria-describedby="label-t">
+                                </div>
+                            </div>
+                        </div>
                         <button class="btn btn-primary" type="submit">Search</button>
                     </form>
                 </div>

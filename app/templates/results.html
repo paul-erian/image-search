@@ -9,11 +9,17 @@
         <h1 class="text-center mb-4">Results for: <span class="text-primary">{{ q }}</span></h1>
         <div class="mb-4">
             <form class="d-flex gap-2" action="/search" method="get">
-                <input class="form-control" type="text" name="q" value="{{ q }}" required>
-                <input class="form-control" type="number" name="k" value="{{ k }}" min="1" max="20">
-                <input class="form-control" type="number" name="t" value="{{ t }}" min="0" max="1" step="0.05" placeholder="Threshold (0-1)">
+                <input class="form-control" type="text" name="q" value="{{ q }}" placeholder="Enter your search..." required autofocus>
+                <div class="input-group">
+                    <span class="input-group-text" id="label-k">max_results</span>
+                    <input class="form-control" type="number" name="k" value="{{ k }}" min="1" max="20" placeholder="Maximum results number (1-20)" aria-label="max_results" aria-describedby="label-k">
+
+                </div>
+                <div class="input-group">
+                    <span class="input-group-text" id="label-t">threshold</span>
+                    <input class="form-control" type="number" name="t" value="{{ t }}" min="0" max="1" step="0.05" placeholder="Threshold (0-1)" aria-label="threshold" aria-describedby="label-t">
+                </div>
                 <button class="btn btn-primary" type="submit">Search</button>
-                <a href="/" class="btn btn-secondary">Back</a>
             </form>
         </div>
         {% if results %}
