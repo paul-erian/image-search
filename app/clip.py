@@ -23,7 +23,7 @@ with torch.no_grad():
     image_features /= image_features.norm(dim=-1, keepdim=True)
 
 # recherche d'images
-def search_images(text_query: str, top_k: int = 5):
+def search_images(text_query: str, top_k: int = 5, treshold: float = 0.3):
     with torch.no_grad():
         text_inputs = processor(text=[text_query], return_tensors="pt")
         text_features = model.get_text_features(**text_inputs)
@@ -35,5 +35,5 @@ def search_images(text_query: str, top_k: int = 5):
         probs = logits_per_image.softmax(dim=0)
 
         top_k_indices = probs.topk(top_k).indices.tolist()
-        results = [(image_paths[i], probs[i].item()) for i in top_k_indices]
+        results = [(image_paths[i], probs[i].item()) for i in top_k_indices if probs[i] >= treshold]
         return results

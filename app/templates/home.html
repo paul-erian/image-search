@@ -13,6 +13,7 @@
                     <form class="d-flex flex-column gap-3" action="/search" method="get">
                         <input class="form-control" type="text" name="q" placeholder="Enter your search..." required autofocus>
                         <input class="form-control" type="number" name="k" value="5" min="1" max="20">
+                        <input class="form-control" type="number" name="t" value="0.3" min="0" max="1" step="0.05" placeholder="Threshold (0-1)">
                         <button class="btn btn-primary" type="submit">Search</button>
                     </form>
                 </div>
