@@ -13,7 +13,6 @@
                 <div class="input-group">
                     <span class="input-group-text" id="label-k">max_results</span>
                     <input class="form-control" type="number" name="k" value="{{ k }}" min="1" max="20" placeholder="Maximum results number (1-20)" aria-label="max_results" aria-describedby="label-k">
-
                 </div>
                 <div class="input-group">
                     <span class="input-group-text" id="label-t">threshold</span>
@@ -27,7 +26,8 @@
                 {% for result in results %}
                     <div class="col">
                         <div class="card h-100 shadow-sm">
-                            <img src="/images/{{ result.filename }}" class="card-img-top" style="object-fit:cover;max-height:256px;">
+                            <img src="/images/{{ result.filename }}" class="card-img-top" style="object-fit:cover;max-height:256px; cursor:pointer;"
+                                 data-bs-toggle="modal" data-bs-target="#imageModal" data-img="/images/{{ result.filename }}" data-title="{{ result.filename }}">
                             <div class="card-body">
                                 <p class="card-text mb-1"><strong>Score:</strong> {{ '%.3f'|format(result.score) }}</p>
                                 <p class="card-text text-muted small">{{ result.filename }}</p>
@@ -36,6 +36,35 @@
                     </div>
                 {% endfor %}
             </div>
+            <!-- Modal for zooming images -->
+            <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="imageModalLabel"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body text-center">
+                    <img src="" id="modalImage" class="img-fluid" alt="Zoomed image">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+            <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var imageModal = document.getElementById('imageModal');
+                imageModal.addEventListener('show.bs.modal', function (event) {
+                    var trigger = event.relatedTarget;
+                    var imgSrc = trigger.getAttribute('data-img');
+                    var imgTitle = trigger.getAttribute('data-title');
+                    var modalImg = imageModal.querySelector('#modalImage');
+                    var modalTitle = imageModal.querySelector('.modal-title');
+                    modalImg.src = imgSrc;
+                    modalTitle.textContent = imgTitle;
+                });
+            });
+            </script>
         {% else %}
             <div class="alert alert-warning text-center">No results found.</div>
         {% endif %}
