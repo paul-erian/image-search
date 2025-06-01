@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Results</title>
+</head>
+<body>
+    <h1>Results for: {{ q }}</h1>
+    <a href="/">Back to search</a>
+    <ul>
+        {% for result in results %}
+            <li>
+                <img src="/images/{{ result.filename }}" width="256"/><br>
+                Score: {{ '%.3f'|format(result.score) }}
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
