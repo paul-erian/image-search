@@ -14,6 +14,7 @@ http://localhost:8000/search?q=blue+and+yellow+chairs
 
 ## TODO
 
+- [ ] suppression softmax + facteur exp
 - [ ] récupération des images depuis cloudflare R2
 - [ ] descriptif du nombres d'image matchées après recherche
 - [ ] sauvegarder les images embeddings sur cloud
