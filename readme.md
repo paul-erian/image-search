@@ -11,3 +11,10 @@ uvicorn main:app --host 0.0.0.0 --port 80
 http://localhost:8000/
 http://localhost:8000/search?q=blue+and+yellow+chairs
 ```
+
+## TODO
+
+- [ ] récupération des images depuis cloudflare R2
+- [ ] descriptif du nombres d'image matchées après recherche
+- [ ] sauvegarder les images embeddings sur cloud
+- [ ] charger CLIP en local ?
