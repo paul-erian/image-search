@@ -19,3 +19,4 @@ http://localhost:8000/search?q=blue+and+yellow+chairs
 - [ ] descriptif du nombres d'image matchées après recherche
 - [ ] sauvegarder les images embeddings sur cloud
 - [ ] charger CLIP en local ?
+- [ ] replacer CLIP (adapaté au ranking) par BLIP-2 (adapté au matching)
