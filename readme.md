@@ -2,7 +2,7 @@
 
 ```shell
 docker build -t image-search .
-docker run -it -p 8000:80 image-search bash
+docker run -v /c/Users/Paul/Downloads/imagenet1k_val:/app/imagenet1k_val -it -p 8000:80 image-search bash
 docker exec -it <container> bash
 ```
 
