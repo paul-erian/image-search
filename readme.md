@@ -2,7 +2,7 @@
 
 ```shell
 docker build -t image-search .
-docker run -v /c/Users/Paul/Downloads/imagenet1k_val:/app/imagenet1k_val -it -p 8000:80 image-search bash
+docker run -it -p 8000:80 image-search bash
 docker exec -it <container> bash
 ```
 
@@ -10,6 +10,15 @@ docker exec -it <container> bash
 uvicorn main:app --host 0.0.0.0 --port 80
 http://localhost:8000/
 http://localhost:8000/search?q=blue+and+yellow+chairs
+```
+
+```shell
+python upload_to_r2.py 
+C:\\Users\\Paul\\Downloads\\imagenet-1k_val 
+--bucket image-search-db 
+--endpoint https://16ee9e2a9099aedfcaf86cd5a5ef621f.r2.cloudflarestorage.com
+--access_key <access_key>
+--secret_key <secret_key>
 ```
 
 ## TODO
