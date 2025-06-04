@@ -41,13 +41,11 @@ def search_images(text_query: str, top_k: int = 5, treshold: float = 0.3):
         text_features = model.get_text_features(**text_inputs)
         text_features /= text_features.norm(dim=-1, keepdim=True)
 
-        logit_scale = model.logit_scale.exp()
-        logits_per_image = logit_scale * (image_features @ text_features.T)  # shape (N, 1)
+        logits_per_image = image_features @ text_features.T
         logits_per_image = logits_per_image.squeeze(1)
-        probs = logits_per_image.softmax(dim=0)
 
-        top_k_indices = probs.topk(top_k).indices.tolist()
-        results = [(image_paths_cloud[i], probs[i].item()) for i in top_k_indices if probs[i] >= treshold]
+        top_k_indices = logits_per_image.topk(top_k).indices.tolist()
+        results = [(image_paths_cloud[i], logits_per_image[i].item()) for i in top_k_indices if logits_per_image[i] >= treshold]
         return results
 
 def dowload_images_from_r2(image_paths_cloud):
