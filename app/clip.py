@@ -1,26 +1,39 @@
 import torch
-from PIL import Image
 from transformers import CLIPProcessor, CLIPModel
 import os
+import boto3
+from dotenv import load_dotenv
 
 # chargement de CLIP
-print("Chargement du modèle CLIP...")
+print("Chargement du modèle CLIP")
 model_name = "openai/clip-vit-base-patch32"
 model = CLIPModel.from_pretrained(model_name).eval()
 processor = CLIPProcessor.from_pretrained(model_name)
 
-# chargement des images
-print("Chargement des images...")
-image_dir = "../images"
-image_paths = [os.path.join(image_dir, f) for f in os.listdir(image_dir)]
-images = [Image.open(p).convert("RGB") for p in image_paths]
+# chargement des embeddings
+if not os.path.exists("clip_embeddings.pt"):
+    # connexion cloud
+    print("Connexion au cloud")
+    load_dotenv(dotenv_path="../.env")
+    endpoint_url = "https://16ee9e2a9099aedfcaf86cd5a5ef621f.r2.cloudflarestorage.com"
+    bucket = "image-search-db"
+    access_key = os.getenv("AWS_ACCESS_KEY_ID")
+    secret_key = os.getenv("AWS_SECRET_ACCESS_KEY")
 
-# chargements embeddings d'images (#TODO: precompute embeddings)
-print("Calcul des embeddings d'images...")
-with torch.no_grad():
-    image_inputs = processor(images=images, return_tensors="pt", padding=True)
-    image_features = model.get_image_features(**image_inputs)
-    image_features /= image_features.norm(dim=-1, keepdim=True)
+    session = boto3.session.Session()
+    s3 = session.client(
+        service_name='s3',
+        endpoint_url=endpoint_url,
+        aws_access_key_id=access_key,
+        aws_secret_access_key=secret_key,
+    )
+    print("Téléchargement des embeddings depuis le cloud")
+    s3.download_file(bucket, "embeddings/clip_embeddings.pt", "clip_embeddings.pt")
+
+print("Chargement des embeddings")
+embeddings = torch.load("clip_embeddings.pt")
+image_paths = list(embeddings.keys())
+image_features = torch.stack(list(embeddings.values()))
 
 # recherche d'images
 def search_images(text_query: str, top_k: int = 5, treshold: float = 0.3):
