@@ -25,7 +25,7 @@ def batch_download(keys, s3, bucket, max_workers=8):
     return [(k, img) for (k, img) in results if k is not None and img is not None]
 
 def main(args):
-    # Chargement des variables d'environnement
+    # Connexion au cloud
     print("Connexion au cloud")
     load_dotenv(dotenv_path=args.env_path)
     access_key = os.getenv("AWS_ACCESS_KEY_ID")
