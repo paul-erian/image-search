@@ -26,11 +26,13 @@ s3 = session.client(
 )
 
 # chargement des embeddings
-if not os.path.exists("clip_embeddings.pt"):
+local_embeddings_path = "../embeddings/clip_embeddings.pt"
+cloud_embeddings_path = "embeddings/clip_embeddings.pt"
+if not os.path.exists(local_embeddings_path):
     print("Téléchargement des embeddings depuis le cloud")
-    s3.download_file(bucket, "embeddings/clip_embeddings.pt", "clip_embeddings.pt")
-print("Chargement des embeddings")
-embeddings = torch.load("clip_embeddings.pt")
+    s3.download_file(bucket, cloud_embeddings_path, local_embeddings_path)
+print(f"Chargement des embeddings {local_embeddings_path}")
+embeddings = torch.load(local_embeddings_path)
 image_paths_cloud = list(embeddings.keys())
 image_features = torch.stack(list(embeddings.values()))
 
