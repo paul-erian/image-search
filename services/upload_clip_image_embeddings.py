@@ -7,31 +7,9 @@ from transformers import CLIPProcessor, CLIPModel
 from concurrent.futures import ThreadPoolExecutor
 from torch.nn.functional import normalize
 from dotenv import load_dotenv
+import argparse
 
-# connexion cloud 
-print("Connexion au cloud")
-load_dotenv(dotenv_path="../.env")
-endpoint_url = "https://16ee9e2a9099aedfcaf86cd5a5ef621f.r2.cloudflarestorage.com"
-bucket = "image-search-db"
-# attention, ici token avec droit RW admin sur le bucket image-search-db
-access_key = os.getenv("AWS_ACCESS_KEY_ID") 
-secret_key = os.getenv("AWS_SECRET_ACCESS_KEY")
-session = boto3.session.Session()
-s3 = session.client(
-    service_name='s3',
-    endpoint_url=endpoint_url,
-    aws_access_key_id=access_key,
-    aws_secret_access_key=secret_key,
-)
-
-# chargement de CLIP
-print("Chargement du modèle CLIP")
-model_name = "openai/clip-vit-base-patch32"
-device = "cuda" if torch.cuda.is_available() else "cpu"
-model = CLIPModel.from_pretrained(model_name).to(device)
-processor = CLIPProcessor.from_pretrained(model_name)
-
-def download_image(key):
+def download_image(key, s3, bucket):
     try:
         response = s3.get_object(Bucket=bucket, Key=key)
         image_bytes = response['Body'].read()
@@ -41,13 +19,34 @@ def download_image(key):
         print(f"Erreur image {key} : {e}")
         return None
 
-def batch_download(keys, max_workers=8):
+def batch_download(keys, s3, bucket, max_workers=8):
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        results = list(executor.map(download_image, keys))
+        results = list(executor.map(lambda k: download_image(k, s3, bucket), keys))
     return [(k, img) for (k, img) in results if k is not None and img is not None]
 
-def main():
-    # recuperation des chemins sur r2
+def main(args):
+    # Chargement des variables d'environnement
+    print("Connexion au cloud")
+    load_dotenv(dotenv_path=args.env_path)
+    access_key = os.getenv("AWS_ACCESS_KEY_ID")
+    secret_key = os.getenv("AWS_SECRET_ACCESS_KEY")
+    session = boto3.session.Session()
+    s3 = session.client(
+        service_name='s3',
+        endpoint_url=args.endpoint_url,
+        aws_access_key_id=access_key,
+        aws_secret_access_key=secret_key,
+    )
+    
+    # Chargement du modèle CLIP
+    print("Chargement du modèle CLIP")
+    model_name = "openai/clip-vit-base-patch32"
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    model = CLIPModel.from_pretrained(model_name).to(device)
+    processor = CLIPProcessor.from_pretrained(model_name)
+
+    # Récupération des chemins d'images sur le bucket
+    bucket = args.bucket
     paginator = s3.get_paginator('list_objects_v2')
     page_iterator = paginator.paginate(Bucket=bucket)
     jpg_files = []
@@ -58,12 +57,14 @@ def main():
                 if key.lower().endswith('.jpg'):
                     jpg_files.append(key)
 
-    # calcul des embeddings par batch
-    batch_size = 16
+    print(f"{len(jpg_files)} images trouvées.")
+
+    # Calcul des embeddings par batch
+    batch_size = args.batch_size
     embeddings = {}
     for i in range(0, len(jpg_files), batch_size):
         batch_keys = jpg_files[i:i + batch_size]
-        downloaded = batch_download(batch_keys)
+        downloaded = batch_download(batch_keys, s3, bucket)
         if not downloaded:
             continue
         valid_keys, images = zip(*downloaded)
@@ -73,11 +74,18 @@ def main():
             image_embeds = normalize(image_embeds, p=2, dim=1).cpu()
         for key, embedding in zip(valid_keys, image_embeds):
             embeddings[key] = embedding
-        print(f"batch {(i//batch_size)+1} OK")
+        print(f"Batch {(i//batch_size)+1} OK ({i+len(batch_keys)}/{len(jpg_files)})")
 
-    # sauvegarde + upload des embeddings sur r2
+    # Sauvegarde et upload des embeddings sur le bucket
     torch.save(embeddings, "clip_embeddings.pt")
     s3.upload_file("clip_embeddings.pt", bucket, Key="embeddings/clip_embeddings.pt")
+    print("Embeddings sauvegardés et uploadés avec succès.")
 
-if __name__=="__main__":
-    main()
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--batch_size', type=int, default=16, help='Taille du batch pour le calcul des embeddings')
+    parser.add_argument('--env_path', type=str, default='../.env', help='Chemin vers le fichier .env')
+    parser.add_argument('--bucket', type=str, default='image-search-db', help='Nom du bucket S3/R2')
+    parser.add_argument('--endpoint_url', type=str, default='https://16ee9e2a9099aedfcaf86cd5a5ef621f.r2.cloudflarestorage.com', help='Endpoint S3/R2')
+    args = parser.parse_args()
+    main(args)
