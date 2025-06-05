@@ -35,7 +35,7 @@ image_paths_cloud = list(embeddings.keys())
 image_features = torch.stack(list(embeddings.values()))
 
 # recherche d'images
-def search_images(text_query: str, top_k: int = 5, treshold: float = 0.3):
+def search_images(text_query: str, top_k: int = 12, treshold: float = 0.2):
     with torch.no_grad():
         text_inputs = processor(text=[text_query], return_tensors="pt")
         text_features = model.get_text_features(**text_inputs)

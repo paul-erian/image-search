@@ -15,7 +15,7 @@ def home(request: Request):
     return templates.TemplateResponse("home.html", {"request": request})
 
 @app.get("/search", response_class=HTMLResponse)
-def search_endpoint(request: Request, q: str = Query(..., description="Description de la recherche"), k: int = 5, t: float = 0.3):
+def search_endpoint(request: Request, q: str = Query(..., description="Description de la recherche"), k: int = 12, t: float = 0.2):
     results = search_images(q, top_k=k, treshold=t)
     image_paths_cloud = [path for path, _ in results]
     dowload_images_from_r2(image_paths_cloud)
