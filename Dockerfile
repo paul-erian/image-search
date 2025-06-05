@@ -4,5 +4,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 COPY app/ app/
 COPY images/ images/
+COPY embeddings/ embeddings/
+COPY .env .env
 EXPOSE 80
 WORKDIR /app/app
