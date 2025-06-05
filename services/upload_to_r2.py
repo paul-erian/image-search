@@ -18,7 +18,7 @@ def upload_directory_to_r2(directory, bucket, endpoint_url, access_key, secret_k
             s3_path = relative_path.replace("\\", "/")  # Windows fix
 
             print(f"Uploading {local_path} to s3://{bucket}/{s3_path}")
-            # s3.upload_file(local_path, bucket, s3_path)
+            s3.upload_file(local_path, bucket, s3_path)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Upload a directory to Cloudflare R2")
