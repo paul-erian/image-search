@@ -6,9 +6,14 @@ from dotenv import load_dotenv
 
 # chargement de CLIP
 print("Chargement du modèle CLIP")
+local_path = "./clip_model"
 model_name = "openai/clip-vit-base-patch32"
-model = CLIPModel.from_pretrained(model_name).eval()
-processor = CLIPProcessor.from_pretrained(model_name)
+if os.path.exists(local_path):
+    model = CLIPModel.from_pretrained(local_path).eval()
+    processor = CLIPProcessor.from_pretrained(local_path)
+else:
+    model = CLIPModel.from_pretrained(model_name).eval()
+    processor = CLIPProcessor.from_pretrained(model_name)
 
 # connexion cloud 
 print("Connexion au cloud")
