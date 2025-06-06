@@ -1,5 +1,5 @@
 import torch
-from transformers import CLIPTextModel, CLIPTokenizer
+from transformers import CLIPProcessor, CLIPModel
 import os
 import boto3
 from dotenv import load_dotenv
@@ -7,8 +7,8 @@ from dotenv import load_dotenv
 # chargement de CLIP
 print("Chargement du modèle CLIP")
 model_name = "openai/clip-vit-base-patch32"
-text_model = CLIPTextModel.from_pretrained(model_name).eval()
-tokenizer = CLIPTokenizer.from_pretrained(model_name)
+model = CLIPModel.from_pretrained(model_name).eval()
+processor = CLIPProcessor.from_pretrained(model_name)
 
 # connexion cloud 
 print("Connexion au cloud")
@@ -36,23 +36,19 @@ embeddings = torch.load(local_embeddings_path)
 image_paths_cloud = list(embeddings.keys())
 image_features = torch.stack(list(embeddings.values()))
 
-# fonction embedding de texte
-def encode_text(text_query: str):
-    inputs = tokenizer([text_query], return_tensors="pt", padding=True, truncation=True)
-    with torch.no_grad():
-        outputs = text_model(**inputs)
-        features = outputs.last_hidden_state[:, 0, :]  # [CLS] token
-        features /= features.norm(dim=-1, keepdim=True)
-    return features
-
-# Recherche d'images
+# recherche d'images
 def search_images(text_query: str, top_k: int = 12, treshold: float = 0.2):
-    text_features = encode_text(text_query)
-    logits_per_image = image_features @ text_features.T
-    logits_per_image = logits_per_image.squeeze(1)
-    top_k_indices = logits_per_image.topk(top_k).indices.tolist()
-    results = [(image_paths_cloud[i], logits_per_image[i].item()) for i in top_k_indices if logits_per_image[i] >= treshold]
-    return results
+    with torch.no_grad():
+        text_inputs = processor(text=[text_query], return_tensors="pt")
+        text_features = model.get_text_features(**text_inputs)
+        text_features /= text_features.norm(dim=-1, keepdim=True)
+
+        logits_per_image = image_features @ text_features.T
+        logits_per_image = logits_per_image.squeeze(1)
+
+        top_k_indices = logits_per_image.topk(top_k).indices.tolist()
+        results = [(image_paths_cloud[i], logits_per_image[i].item()) for i in top_k_indices if logits_per_image[i] >= treshold]
+        return results
 
 def dowload_images_from_r2(image_paths_cloud):
     for cloud_path in image_paths_cloud:
