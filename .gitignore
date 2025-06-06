@@ -3,3 +3,5 @@ __pycache__/
 tmp/
 .env
 *.pem
+clip_model/
+clip_embeddings_*00.pt
