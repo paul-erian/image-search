@@ -31,7 +31,7 @@ s3 = session.client(
 )
 
 # chargement des embeddings
-local_embeddings_path = "../embeddings/clip_embeddings.pt"
+local_embeddings_path = "../embeddings/clip_embeddings_20000.pt"
 cloud_embeddings_path = "embeddings/clip_embeddings.pt"
 if not os.path.exists(local_embeddings_path):
     print("Téléchargement des embeddings depuis le cloud")
@@ -39,13 +39,14 @@ if not os.path.exists(local_embeddings_path):
 print(f"Chargement des embeddings {local_embeddings_path}")
 embeddings = torch.load(local_embeddings_path)
 image_paths_cloud = list(embeddings.keys())
-image_features = torch.stack(list(embeddings.values()))
+image_features = torch.stack(list(embeddings.values())).half()
+del embeddings
 
 # recherche d'images
 def search_images(text_query: str, top_k: int = 12, treshold: float = 0.2):
     with torch.no_grad():
         text_inputs = processor(text=[text_query], return_tensors="pt")
-        text_features = model.get_text_features(**text_inputs)
+        text_features = model.get_text_features(**text_inputs).half()
         text_features /= text_features.norm(dim=-1, keepdim=True)
 
         logits_per_image = image_features @ text_features.T
