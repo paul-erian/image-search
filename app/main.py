@@ -38,8 +38,8 @@ def home(request: Request):
 @app.get("/search", response_class=HTMLResponse)
 def search_endpoint(request: Request, q: str = Query(..., description="Description de la recherche"), k: int = 12, t: float = 0.2):
     results = clip_image_searcher.search(q, top_k=k, treshold=t)
-    s3_images_to_dowload = [path for path, _ in results]
-    loader.download(s3_images_to_dowload, "../images")
+    s3_images_to_donwload = [path for path, _ in results]
+    loader.download(s3_images_to_donwload, "../images")
     return templates.TemplateResponse("results.html", {
         "request": request,
         "q": q,
