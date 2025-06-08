@@ -4,7 +4,11 @@ from fastapi import FastAPI, Query, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from clip import search_images, dowload_images_from_r2
+from clip import search_images
+from config import s3, bucket
+from s3_data_loader import S3DataLoader
+
+loader = S3DataLoader(s3, bucket)
 
 app = FastAPI()
 app.mount("/images", StaticFiles(directory=os.path.abspath("../images")), name="images")
@@ -17,8 +21,8 @@ def home(request: Request):
 @app.get("/search", response_class=HTMLResponse)
 def search_endpoint(request: Request, q: str = Query(..., description="Description de la recherche"), k: int = 12, t: float = 0.2):
     results = search_images(q, top_k=k, treshold=t)
-    image_paths_cloud = [path for path, _ in results]
-    dowload_images_from_r2(image_paths_cloud)
+    s3_images_to_dowload = [path for path, _ in results]
+    loader.download(s3_images_to_dowload, "../images")
     return templates.TemplateResponse("results.html", {
         "request": request,
         "q": q,
