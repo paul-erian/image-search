@@ -1,6 +1,6 @@
 import torch
 
-class ImageSearcher:
+class ClipImageSearcher:
     def __init__(self, model, processor, image_features, s3_image_paths):
         self.model = model
         self.processor = processor
