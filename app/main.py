@@ -5,14 +5,14 @@ from fastapi import FastAPI, Query, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from app.clip_utils import load_clip
+from clip_utils import load_clip
 from config import s3, bucket
-from s3_data_loader import S3DataLoader
+from s3_data_downloader import S3DataDownloader
 from clip_image_searcher import ClipImageSearcher
 
 print("telechargement des embeddings image depuis s3 ...")
-loader = S3DataLoader(s3, bucket)
-loader.download(["embeddings/clip_embeddings.pt"], "../embeddings")
+downloader = S3DataDownloader(s3, bucket)
+downloader.download(["embeddings/clip_embeddings.pt"], "../embeddings")
 
 print("chargement des embeddings image dans la RAM ...")
 embeddings = torch.load("../embeddings/clip_embeddings_20000.pt")
@@ -39,7 +39,7 @@ def home(request: Request):
 def search_endpoint(request: Request, q: str = Query(..., description="Description de la recherche"), k: int = 12, t: float = 0.2):
     results = clip_image_searcher.search(q, top_k=k, treshold=t)
     s3_images_to_donwload = [path for path, _ in results]
-    loader.download(s3_images_to_donwload, "../images")
+    downloader.download(s3_images_to_donwload, "../images")
     return templates.TemplateResponse("results.html", {
         "request": request,
         "q": q,

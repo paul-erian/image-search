@@ -1,6 +1,6 @@
 import os
 
-class S3DataLoader():
+class S3DataDownloader():
     def __init__(self, s3, bucket):
         self.s3 = s3
         self.bucket = bucket

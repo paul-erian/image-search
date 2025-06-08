@@ -1,4 +1,4 @@
-from clip import search_images, dowload_images_from_r2
+from app.clip_utils import search_images, dowload_images_from_r2
 
 if __name__ == "__main__":
     query = "a photo of a boat"
