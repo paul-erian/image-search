@@ -18,16 +18,13 @@ else:
 # connexion cloud 
 print("Connexion au cloud")
 load_dotenv(dotenv_path="../.env")
-endpoint_url = "https://16ee9e2a9099aedfcaf86cd5a5ef621f.r2.cloudflarestorage.com"
-bucket = "image-search-db"
-access_key = os.getenv("AWS_ACCESS_KEY_ID")
-secret_key = os.getenv("AWS_SECRET_ACCESS_KEY")
+bucket = os.getenv("BUCKET_NAME")
 session = boto3.session.Session()
 s3 = session.client(
     service_name='s3',
-    endpoint_url=endpoint_url,
-    aws_access_key_id=access_key,
-    aws_secret_access_key=secret_key,
+    endpoint_url=os.getenv("ENDPOINT_URL"),
+    aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+    aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
 )
 
 # chargement des embeddings
