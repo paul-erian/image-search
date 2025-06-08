@@ -3,16 +3,13 @@ from transformers import CLIPProcessor, CLIPModel
 import os
 from config import s3, bucket
 
-# chargement de CLIP
-print("Chargement du modèle CLIP")
-local_path = "./clip_model"
-model_name = "openai/clip-vit-base-patch32"
-if os.path.exists(local_path):
-    model = CLIPModel.from_pretrained(local_path).eval()
-    processor = CLIPProcessor.from_pretrained(local_path)
-else:
-    model = CLIPModel.from_pretrained(model_name).eval()
-    processor = CLIPProcessor.from_pretrained(model_name)
+def load_clip(model_name="openai/clip-vit-base-patch32", local_dir="./clip_model"):
+    source = local_dir if os.path.exists(local_dir) else model_name
+    model = CLIPModel.from_pretrained(source).eval()
+    processor = CLIPProcessor.from_pretrained(source)
+    return model, processor
+
+model, processor = load_clip()
 
 # chargement des embeddings
 local_embeddings_path = "../embeddings/clip_embeddings_20000.pt"
