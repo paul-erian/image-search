@@ -7,9 +7,15 @@ Ce projet met en œuvre le modèle CLIP d’OpenAI, qui permet de comparer direc
 
 L’objectif est de proposer une API web performante et une interface simple pour explorer la recherche d’images par description sémantique. L'application est déployée sur un instance d'AWS EC2 et est disponible à cette [adresse](http://16.171.6.178:8000/).
 
-ajout demo
+todo : demo
 
 ## Stack technique
+
+### Architecture globale
+
+todo : schéma
+
+### Stack technique détaillé
 
 - **AWS EC2** : Hébergement du serveur et déploiement de l’application dans le cloud.
 - **AWS S3** : Les embeddings et les images sont stockés sur S3, avec l’API Python **Boto3** pour automatiser l’upload et le téléchargement des fichiers.
@@ -64,7 +70,7 @@ Puis dans votre navigateur, allez à l'adresse `http://localhost:8000/`. L'appli
 
 ### Déploiement sur le cloud
 
-à faire
+todo : completer
 
 ## Choix et détails techniques
 
