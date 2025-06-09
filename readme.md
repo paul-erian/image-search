@@ -22,9 +22,10 @@ ajout demo
 
 ### prerequis
 
-- git
-- Un compte AWS avec accès à S3 et EC2
-- Docker (optionnel mais je vous le conseil fortement :) )
+- Git
+- Docker
+- Un compte AWS avec accès à EC2
+- Un bucket AWS S3 avec une base d'images et leurs embeddings clip
 
 ### installation avec docker
 
@@ -44,7 +45,7 @@ AWS_ACCESS_KEY_ID=...
 AWS_SECRET_ACCESS_KEY=...
 ```
 
-3. Construisez l'image docker et lancer un conteneur
+3. Construisez l'image docker et lancez un conteneur
 
 ```shell
 docker build -t image-search .
@@ -68,26 +69,3 @@ Puis dans votre navigateur, allez à l'adresse `http://localhost:8000/`. L'appli
 ## Choix et détails techniques
 
 BDD ImageNet
-
-## à trier
-
-```shell
-docker build -t image-search .
-docker run -it --env-file .env -p 8000:80 image-search bash
-docker exec -it <container> bash
-```
-
-```shell
-uvicorn main:app --host 0.0.0.0 --port 80
-http://localhost:8000/
-http://localhost:8000/search?q=blue+and+yellow+chairs
-```
-
-```shell
-python upload_to_r2.py 
-C:\\Users\\Paul\\Downloads\\imagenet-1k_val 
---bucket image-search-db 
---endpoint https://16ee9e2a9099aedfcaf86cd5a5ef621f.r2.cloudflarestorage.com
---access_key <access_key>
---secret_key <secret_key>
-```
