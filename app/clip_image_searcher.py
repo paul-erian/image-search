@@ -1,6 +1,8 @@
 import torch
 
 class ClipImageSearcher:
+    """ Classe de recherche des images les plus similaires à une requête texte a 
+    partir d'embeddings images precalculés avec CLIP."""
     def __init__(self, model, processor, image_features, s3_image_paths):
         self.model = model
         self.processor = processor

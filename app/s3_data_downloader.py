@@ -1,6 +1,8 @@
 import os
 
 class S3DataDownloader():
+    """Classe utilitaire pour télécharger des fichiers depuis un bucket S3
+    vers un dossier local."""
     def __init__(self, s3, bucket):
         self.s3 = s3
         self.bucket = bucket

@@ -1,4 +1,3 @@
-# app/main.py
 import os
 import torch
 from fastapi import FastAPI, Query, Request
@@ -31,6 +30,7 @@ app = FastAPI()
 app.mount("/images", StaticFiles(directory=os.path.abspath(image_dir)), name="images")
 templates = Jinja2Templates(directory="templates")
 
+# page d'acceuil pour la recherche
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
         return templates.TemplateResponse(
@@ -42,6 +42,7 @@ def home(request: Request):
         }
     )
 
+# page d'affichage des resultats de la recherche
 @app.get("/search", response_class=HTMLResponse)
 def search_endpoint(request: Request,  k: int, t: float, q: str=Query(..., description="Description de la recherche")):
     results = clip_image_searcher.search(q, top_k=k, treshold=t)
