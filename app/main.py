@@ -33,10 +33,17 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
-    return templates.TemplateResponse("home.html", {"request": request})
+        return templates.TemplateResponse(
+        "index.html",
+        {
+            "request": request,
+            "k": start_top_k,
+            "t": start_treshold
+        }
+    )
 
 @app.get("/search", response_class=HTMLResponse)
-def search_endpoint(request: Request, q: str = Query(..., description="Description de la recherche"), k=start_top_k, t=start_treshold):
+def search_endpoint(request: Request,  k: int, t: float, q: str=Query(..., description="Description de la recherche")):
     results = clip_image_searcher.search(q, top_k=k, treshold=t)
     s3_images_to_donwload = [path for path, _ in results]
     downloader.download(s3_images_to_donwload, image_dir)
