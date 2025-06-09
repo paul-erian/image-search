@@ -7,7 +7,7 @@ class ClipImageSearcher:
         self.image_features = image_features
         self.s3_image_paths = s3_image_paths
 
-    def search(self, text_query, top_k=12, treshold=0.2):
+    def search(self, text_query, top_k, treshold):
         with torch.no_grad():
             text_inputs = self.processor(text=[text_query], return_tensors="pt")
             text_features = self.model.get_text_features(**text_inputs).half()

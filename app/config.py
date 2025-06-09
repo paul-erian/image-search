@@ -13,6 +13,10 @@ clip_path = "./clip_model"
 image_dir = "../images"
 env_path = "../.env"
 
+# variables
+start_treshold = 0.20
+start_top_k = 9
+
 # client s3
 load_dotenv(dotenv_path=env_path)
 bucket = os.getenv("BUCKET_NAME")

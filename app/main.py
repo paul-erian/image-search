@@ -6,7 +6,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from clip_utils import load_clip
-from config import s3_embeddings_dir, model_name, embeddings_dir, embeddings_name, clip_path, image_dir, s3, bucket
+from config import s3_embeddings_dir, model_name, embeddings_dir, embeddings_name, clip_path, image_dir, start_top_k, start_treshold, s3, bucket
 from s3_data_downloader import S3DataDownloader
 from clip_image_searcher import ClipImageSearcher
 
@@ -36,7 +36,7 @@ def home(request: Request):
     return templates.TemplateResponse("home.html", {"request": request})
 
 @app.get("/search", response_class=HTMLResponse)
-def search_endpoint(request: Request, q: str = Query(..., description="Description de la recherche"), k: int = 12, t: float = 0.2):
+def search_endpoint(request: Request, q: str = Query(..., description="Description de la recherche"), k=start_top_k, t=start_treshold):
     results = clip_image_searcher.search(q, top_k=k, treshold=t)
     s3_images_to_donwload = [path for path, _ in results]
     downloader.download(s3_images_to_donwload, image_dir)
