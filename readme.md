@@ -20,6 +20,51 @@ ajout demo
 
 ## Installation et configuration
 
+### prerequis
+
+- git
+- Un compte AWS avec accès à S3 et EC2
+- Docker (optionnel mais je vous le conseil fortement :) )
+
+### installation avec docker
+
+1. Clonez le projet
+
+```shell
+git clone https://github.com/ton-utilisateur/image-search.git
+cd image-search
+```
+
+2. Creez un fichier `.env` à la racine du projet, avec les informations d'accès à votre bucket S3.
+
+```shell
+ENDPOINT_URL=...
+BUCKET_NAME=...
+AWS_ACCESS_KEY_ID=...
+AWS_SECRET_ACCESS_KEY=...
+```
+
+3. Construisez l'image docker et lancer un conteneur
+
+```shell
+docker build -t image-search .
+docker run -it --env-file .env -p 8000:80 image-search bash
+```
+
+### lancement en local
+
+Depuis votre conteneur, lancer la commande uvicorn
+
+```shell
+uvicorn main:app --host 0.0.0.0 --port 8000
+```
+
+Puis dans votre navigateur, allez à l'adresse `http://localhost:8000/`. L'application apparait !
+
+### Déploiement sur le cloud
+
+à faire
+
 ## Choix et détails techniques
 
 BDD ImageNet
