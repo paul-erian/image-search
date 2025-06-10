@@ -1,6 +1,7 @@
 # image-search
 
 ![architecture](assets\stack.png)
+
 ## Presentation
 
 **image-search** est un moteur de recherche d’images basé sur la similarité sémantique entre texte et image.  
