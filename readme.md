@@ -1,6 +1,6 @@
 # image-search
 
-![stack](assets\stack.png)
+![stack](assets/stack.png)
 
 ## Presentation
 
@@ -21,7 +21,7 @@ L’objectif est de proposer une API web performante et une interface simple pou
 4. La similarité entre embeddings est évaluer grâce à la distance cosinus.
 5. Les meilleurs résultats sont sélectionnés, puis une requête est envoyée au cloud AWS pour télécharger les images correspondantes. Ces images sont enfin affichées sur l'API web.
 
-![architecture](assets\architecture.svg)
+![architecture](assets/architecture.svg)
 
 ## Stack technique
 
