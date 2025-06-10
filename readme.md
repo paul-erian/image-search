@@ -13,21 +13,13 @@ todo : demo
 
 ![adresse](assets\architecture.svg).
 
-### Comment ca fonctionne ?
+## Comment ca fonctionne ?
 
 1. L'utilisateur soumet une requête textuelle via l'API web.
 2. Le modèle ClipText génère un embedding pour cette requête.
 3. Cet embedding est comparé aux embeddings d'images pré-calculés et préalablement téléchargés depuis le bucket S3 au démarrage de l'application.
 4. La similarité entre embeddings est évaluer grâce à la distance cosinus.
 5. Les meilleurs résultats sont sélectionnés, puis une requête est envoyée au cloud AWS pour télécharger les images correspondantes. Ces images sont enfin affichées sur l'API web.
-
-### Points techniques à noter
-
-Étant donné que la RAM est limité à 1Go sur AWS EC2 et que la latence est importante pour l'expérience utilisateur, l'application doit être optimisé :
-
-* Une seule prédiction est effectuée par requête, grace aux embeddings image pré-caclculés.
-* La distance cosinus est calculée via une multiplication vectorisée, accélèrant le traitement.
-* Seules les images à afficher sont chargées en mémoire, limitant la consommation de RAM au nécessaire.
 
 ## Stack technique
 
@@ -85,6 +77,16 @@ Puis dans votre navigateur, allez à l'adresse `http://localhost:8000/`. L'appli
 ### Déploiement sur le cloud
 
 todo : completer
+
+## Points techniques à noter
+
+### Optimisation
+
+Étant donné que la RAM est limité à 1Go sur AWS EC2 et que la latence est importante pour l'expérience utilisateur, l'application doit être optimisé :
+
+* Une seule prédiction est effectuée par requête, grace aux embeddings image pré-caclculés.
+* La distance cosinus est calculée via une multiplication vectorisée, accélèrant le traitement.
+* Seules les images à afficher sont chargées en mémoire, limitant la consommation de RAM au nécessaire.
 
 ## Limitations
 
