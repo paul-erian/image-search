@@ -1,6 +1,6 @@
 # image-search
 
-![architecture](assets\stack.png)
+![stack](assets\stack.png)
 
 ## Presentation
 
