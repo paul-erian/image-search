@@ -1,7 +1,5 @@
 # image-search
 
-## Presentation
-
 **image-search** est un moteur de recherche d’images basé sur la similarité sémantique entre texte et image.  
 Ce projet met en œuvre le modèle **CLIP d’OpenAI**, qui permet de comparer directement une requête textuelle et des images en les projetant dans un même espace d’embeddings.
 
