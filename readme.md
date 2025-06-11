@@ -1,7 +1,5 @@
 # image-search
 
-![stack](assets/stack.png)
-
 ## Presentation
 
 **image-search** est un moteur de recherche d’images basé sur la similarité sémantique entre texte et image.  
@@ -24,6 +22,8 @@ L’objectif est de proposer une API web performante et une interface simple pou
 ![architecture](assets/architecture.svg)
 
 ## Stack technique
+
+![stack](assets/stack.png)
 
 * **AWS EC2** : Hébergement du serveur et déploiement de l’application dans le cloud.
 * **AWS S3** : Les embeddings et les images sont stockés sur S3, avec l’API Python **Boto3** pour automatiser l’upload et le téléchargement des fichiers.
