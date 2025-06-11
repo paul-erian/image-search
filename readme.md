@@ -95,3 +95,8 @@ todo : completer
 * **CLIP n'est pas calibré** : Les scores de similarité de CLIP ne représentent pas une probabilité (d'ailleurs ils sont entre 0.1 et 0.35). Il est entraîné par apprentissage contrastif pour rapprocher les textes et images associés, et non pas pour mesurer la pertinence absolue. **Une requête sans sens produira des correspondances**, car le modèle cherche toujours l’appariement le plus proche.
 
 * **Nombre d’images** : Le projet utilise 50 000 images d’ImageNet, limité par l'espace disponible sur AWS. La pertinence du matching dépend de la taille de la base. Une requête comme "a drawing of a football player fighting with a cheese" ne donnera aucun résultats pertinents, simplement parce que ce type de contenu n’existe pas dans base de données.
+
+## Licence
+
+Le code source est distribué sous licence MIT.  
+Les images et embeddings utilisés proviennent d’ImageNet et sont soumis à leur propre licence d’utilisation.
