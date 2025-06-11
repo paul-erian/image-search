@@ -5,7 +5,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from clip_utils import load_clip
-from config import s3_embeddings_dir, model_name, embeddings_dir, embeddings_name, clip_path, image_dir, start_top_k, start_treshold, s3, bucket
+from config import s3_embeddings_dir, model_name, embeddings_dir, embeddings_name, clip_path, image_dir, start_top_k, start_treshold, s3, bucket, git_url
 from s3_data_downloader import S3DataDownloader
 from clip_image_searcher import ClipImageSearcher
 
@@ -38,7 +38,8 @@ def home(request: Request):
         {
             "request": request,
             "k": start_top_k,
-            "t": start_treshold
+            "t": start_treshold,
+            "git_url": git_url
         }
     )
 
@@ -53,5 +54,6 @@ def search_endpoint(request: Request,  k: int, t: float, q: str=Query(..., descr
         "q": q,
         "k": k,
         "t": t,
+        "git_url": git_url,
         "results": [{"filename": os.path.basename(path), "score": score} for path, score in results]
     })

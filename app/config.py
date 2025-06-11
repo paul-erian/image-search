@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 # chemins distant
 s3_embeddings_dir = "embeddings"
 model_name = "openai/clip-vit-base-patch32"
-
+git_url = "https://github.com/paul-erian/image-search/"
 # chemins locaux
 embeddings_dir = "../embeddings"
 embeddings_name = "clip_embeddings_20000.pt"
