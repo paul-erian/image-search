@@ -3,7 +3,7 @@
 **image-search** est un moteur de recherche d’images basé sur la similarité sémantique entre texte et image.  
 Ce projet met en œuvre le modèle **CLIP d’OpenAI**, qui permet de comparer directement une requête textuelle et des images en les projetant dans un même espace d’embeddings.
 
-L’objectif est de proposer une API web performante et une interface simple pour explorer la recherche d’images par description sémantique. L'application est **déployée sur un instance d'AWS EC2** et est **disponible à cette [adresse](http://16.171.6.178:8000/)**.
+L’objectif est de proposer une API web performante et une interface simple pour explorer la recherche d’images par description sémantique. L'application est **déployée sur un instance d'AWS EC2** et est **disponible à cette [adresse](http://51.21.251.113:8000/)**.
 
 ![bird](assets/bird_in_a_tree.png)
 ![rock](assets/rock_concert.png)
