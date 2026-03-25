@@ -1,8 +1,0 @@
-fastapi
-uvicorn
-torch
-torchvision
-transformers
-pillow
-boto3
-python-dotenv
