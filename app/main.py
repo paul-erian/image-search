@@ -1,13 +1,27 @@
 import os
+
 import torch
 from fastapi import FastAPI, Query, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from clip_utils import load_clip
-from config import s3_embeddings_dir, model_name, embeddings_dir, embeddings_name, clip_path, image_dir, start_top_k, start_treshold, s3, bucket, git_url
-from s3_data_downloader import S3DataDownloader
+
 from clip_image_searcher import ClipImageSearcher
+from clip_utils import load_clip
+from config import (
+        bucket,
+        clip_path,
+        embeddings_dir,
+        embeddings_name,
+        git_url,
+        image_dir,
+        model_name,
+        s3,
+        s3_embeddings_dir,
+        start_top_k,
+        start_treshold,
+)
+from s3_data_downloader import S3DataDownloader
 
 print("telechargement des embeddings image depuis s3 ...")
 downloader = S3DataDownloader(s3, bucket)
@@ -45,7 +59,10 @@ def home(request: Request):
 
 # page d'affichage des resultats de la recherche
 @app.get("/search", response_class=HTMLResponse)
-def search_endpoint(request: Request,  k: int, t: float, q: str=Query(..., description="Description de la recherche")):
+def search_endpoint(request: Request,
+                    k: int,
+                    t: float,
+                    q: str=Query(..., description="Description de la recherche")):
     results = clip_image_searcher.search(q, top_k=k, treshold=t)
     s3_images_to_donwload = [path for path, _ in results]
     downloader.download(s3_images_to_donwload, image_dir)

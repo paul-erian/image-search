@@ -1,5 +1,6 @@
 import torch
 
+
 class ClipImageSearcher:
     """ Classe de recherche des images les plus similaires à une requête texte a 
     partir d'embeddings images precalculés avec CLIP."""

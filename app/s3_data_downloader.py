@@ -1,5 +1,6 @@
 import os
 
+
 class S3DataDownloader():
     """Classe utilitaire pour télécharger des fichiers depuis un bucket S3
     vers un dossier local."""

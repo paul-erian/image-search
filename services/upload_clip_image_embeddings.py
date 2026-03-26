@@ -1,13 +1,15 @@
-import os
-import boto3
-from io import BytesIO
-from PIL import Image
-import torch
-from transformers import CLIPProcessor, CLIPModel
-from concurrent.futures import ThreadPoolExecutor
-from torch.nn.functional import normalize
-from dotenv import load_dotenv
 import argparse
+import os
+from concurrent.futures import ThreadPoolExecutor
+from io import BytesIO
+
+import boto3
+import torch
+from dotenv import load_dotenv
+from PIL import Image
+from torch.nn.functional import normalize
+from transformers import CLIPModel, CLIPProcessor
+
 
 def download_image(key, s3, bucket):
     try:
@@ -83,9 +85,12 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--batch_size', type=int, default=16, help='Taille du batch pour le calcul des embeddings')
-    parser.add_argument('--env_path', type=str, default='../.env', help='Chemin vers le fichier .env')
+    parser.add_argument('--batch_size', type=int, default=16, help='Taille du batch pour inference')
+    parser.add_argument('--env_path', type=str, default='../.env', help='Chemin vers .env')
     parser.add_argument('--bucket', type=str, default='image-search-db', help='Nom du bucket S3/R2')
-    parser.add_argument('--endpoint_url', type=str, default='https://16ee9e2a9099aedfcaf86cd5a5ef621f.r2.cloudflarestorage.com', help='Endpoint S3/R2')
+    parser.add_argument('--endpoint_url',
+                        type=str,
+                        default='https://16ee9e2a9099aedfcaf86cd5a5ef621f.r2.cloudflarestorage.com',
+                        help='Endpoint S3/R2')
     args = parser.parse_args()
     main(args)

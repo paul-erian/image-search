@@ -1,5 +1,7 @@
-from transformers import CLIPProcessor, CLIPModel
 import os
+
+from transformers import CLIPModel, CLIPProcessor
+
 
 def load_clip(model_name="openai/clip-vit-base-patch32", local_dir="./clip_model"):
     """Téléchargement de CLIP dans un dossier local (si pas deja present)."""

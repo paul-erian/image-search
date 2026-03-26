@@ -1,7 +1,9 @@
-import os
-import boto3
 import argparse
+import os
+
+import boto3
 from dotenv import load_dotenv
+
 
 def main(args):
     # Connexion au cloud
@@ -28,8 +30,11 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("directory", type=str, help="Chemin vers la BDD d'images locale")
-    parser.add_argument('--env_path', type=str, default='../.env', help='Chemin vers le fichier .env')
+    parser.add_argument('--env_path', type=str, default='../.env', help='Chemin vers .env')
     parser.add_argument('--bucket', type=str, default='image-search-db', help='Nom du bucket S3/R2')
-    parser.add_argument('--endpoint_url', type=str, default='https://16ee9e2a9099aedfcaf86cd5a5ef621f.r2.cloudflarestorage.com', help='Endpoint S3/R2')
+    parser.add_argument('--endpoint_url',
+                        type=str,
+                        default='https://16ee9e2a9099aedfcaf86cd5a5ef621f.r2.cloudflarestorage.com',
+                        help='Endpoint S3/R2')
     args = parser.parse_args()
     main(args)
