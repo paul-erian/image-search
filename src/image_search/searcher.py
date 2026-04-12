@@ -1,4 +1,3 @@
-import argparse
 import pickle
 from pathlib import Path
 
@@ -39,18 +38,3 @@ class Searcher:
             top_indices = logits.topk(top_k).indices.tolist()
             results = [(self.image_paths[i], logits[i].item()) for i in top_indices]
             return results
-
-
-if __name__=="__main__":
-    parser = argparse.ArgumentParser(
-        description="Rechercher les images les plus similaires à une requête textuelle")
-    parser.add_argument('--embeddings', type=Path, required=True,
-                        help='Fichier .pkl contenant les embeddings')
-    parser.add_argument('--query', type=str, required=True, help='Requête textuelle')
-    parser.add_argument('--top-k', type=int, default=5, help='Nombre de résultats à afficher')
-    args = parser.parse_args()
-
-    searcher = Searcher(args.embeddings)
-    results = searcher.search(args.query, args.top_k)
-    for i, (image_path, score) in enumerate(results):
-        print(f"{i+1}. {image_path} ({score:.4f})")

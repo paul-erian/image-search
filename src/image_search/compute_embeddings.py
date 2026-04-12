@@ -1,4 +1,3 @@
-import argparse
 import pickle
 from pathlib import Path
 
@@ -28,7 +27,7 @@ def compute_embeddings(image_dir: Path, output_dir: Path, image_format: str)->No
 
     # Calcul des embeddings
     embeddings = {}
-    for image_path in tqdm(image_paths, desc="Computing embeddings"):
+    for image_path in tqdm(image_paths[:100], desc="Computing embeddings"):
         image = Image.open(image_path).convert("RGB")
         inputs = processor(images=image, return_tensors="pt", padding=True).to(device)
 
@@ -40,13 +39,3 @@ def compute_embeddings(image_dir: Path, output_dir: Path, image_format: str)->No
 
     with open(output_path, 'wb') as f:
         pickle.dump(embeddings, f)
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--image_dir', type=Path, help='Répertoire contenant les images')
-    parser.add_argument('--output_dir', type=Path, help='Chemin de sortie pour les embeddings')
-    parser.add_argument('--image_format', type=str, default="JPEG", help='Format des images')
-    args = parser.parse_args()
-
-    compute_embeddings(args.image_dir, args.output_dir, args.image_format)

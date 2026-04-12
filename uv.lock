@@ -320,6 +320,7 @@ dependencies = [
     { name = "torch" },
     { name = "torchvision" },
     { name = "transformers" },
+    { name = "typer" },
     { name = "uvicorn" },
 ]
 
@@ -334,6 +335,7 @@ requires-dist = [
     { name = "torch", specifier = ">=2.11.0" },
     { name = "torchvision", specifier = ">=0.26.0" },
     { name = "transformers", specifier = ">=5.3.0" },
+    { name = "typer", specifier = ">=0.24.1" },
     { name = "uvicorn", specifier = ">=0.42.0" },
 ]
 
