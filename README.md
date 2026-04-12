@@ -7,9 +7,9 @@ L’objectif est de proposer une API web performante et une interface simple pou
 
 [WORK IN PROGRESS] L'application est en cours de maintenance en ce moment (voir les issues).
 
-![bird](assets/bird_in_a_tree.png)
-![rock](assets/rock_concert.png)
-![rock](assets/bicycle.png)
+![bird](images/bird_in_a_tree.png)
+![rock](images/rock_concert.png)
+![rock](images/bicycle.png)
 
 ## Comment ca fonctionne ?
 
@@ -19,11 +19,11 @@ L’objectif est de proposer une API web performante et une interface simple pou
 4. La similarité entre embeddings est évaluer grâce à la distance cosinus.
 5. Les meilleurs résultats sont sélectionnés, puis une requête est envoyée au cloud AWS pour télécharger les images correspondantes. Ces images sont enfin affichées sur l'API web.
 
-![architecture](assets/architecture.svg)
+![architecture](images/architecture.svg)
 
 ## Stack technique
 
-![stack](assets/stack.png)
+![stack](images/stack.png)
 
 * **AWS EC2** : Hébergement du serveur et déploiement de l’application dans le cloud.
 * **AWS S3** : Les embeddings et les images sont stockés sur S3, avec l’API Python **Boto3** pour automatiser l’upload et le téléchargement des fichiers.
