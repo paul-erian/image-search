@@ -1,4 +1,5 @@
 import argparse
+import pickle
 from pathlib import Path
 
 import torch
@@ -8,20 +9,21 @@ from tqdm import tqdm
 from transformers import CLIPModel, CLIPProcessor
 
 
-def compute_embeddings(image_dir: Path, image_format: str)->None:
+def compute_embeddings(image_dir: Path, output_dir: Path, image_format: str)->None:
     """Calcule les embeddings CLIP pour les images d'un répertoire
        et les sauvegarde dans un fichier .pt."""
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     # Chargement du modèle CLIP
     model_name = "openai/clip-vit-base-patch32"
-    model = CLIPModel.from_pretrained(model_name).to(device)
+    model = CLIPModel.from_pretrained(model_name).to(device).eval()
     processor = CLIPProcessor.from_pretrained(model_name)
 
     # Chemins
     input_dir = Path(image_dir)
     image_paths = list(input_dir.rglob("*." + image_format))
-    output_path = input_dir / "clip_embeddings.pt"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_path = output_dir / "clip_embeddings.pkl"
 
     # Calcul des embeddings
     embeddings = {}
@@ -34,14 +36,16 @@ def compute_embeddings(image_dir: Path, image_format: str)->None:
             image_features = image_features.pooler_output # (batch_size, embedding_dim)
             image_features = normalize(image_features, p=2, dim=-1)
             embeddings[image_path.name] = image_features.cpu().numpy()
-    
-    torch.save(embeddings, output_path)
+
+    with open(output_path, 'wb') as f:
+        pickle.dump(embeddings, f)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--image_dir', type=Path, help='Répertoire contenant les images')
+    parser.add_argument('--output_dir', type=Path, help='Chemin de sortie pour les embeddings')
     parser.add_argument('--image_format', type=str, default="JPEG", help='Format des images')
     args = parser.parse_args()
 
-    compute_embeddings(args.image_dir, args.image_format)
+    compute_embeddings(args.image_dir, args.output_dir, args.image_format)
