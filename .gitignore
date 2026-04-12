@@ -1,7 +1,3 @@
 __pycache__/
 .vscode/
-tmp/
-.env
-*.pem
-clip_model/
-clip_embeddings_*00.pt
+*.egg-info/
