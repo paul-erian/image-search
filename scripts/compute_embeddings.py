@@ -23,7 +23,8 @@ def compute_embeddings(image_dir: Path, output_dir: Path, image_format: str)->No
     input_dir = Path(image_dir)
     image_paths = list(input_dir.rglob("*." + image_format))
     output_dir.mkdir(parents=True, exist_ok=True)
-    output_path = output_dir / "clip_embeddings.pkl"
+    file_name = f"{model_name.replace('/', '_')}_{image_dir.name}.pkl"
+    output_path = output_dir / file_name
 
     # Calcul des embeddings
     embeddings = {}
@@ -35,7 +36,7 @@ def compute_embeddings(image_dir: Path, output_dir: Path, image_format: str)->No
             image_features = model.get_image_features(**inputs)
             image_features = image_features.pooler_output # (batch_size, embedding_dim)
             image_features = normalize(image_features, p=2, dim=-1)
-            embeddings[image_path.name] = image_features.cpu().numpy()
+            embeddings[image_path] = image_features.cpu().numpy()
 
     with open(output_path, 'wb') as f:
         pickle.dump(embeddings, f)
