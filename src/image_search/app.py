@@ -9,7 +9,8 @@ from .searcher import Searcher
 
 
 def create_app(embeddings_path: Path, image_dir: Path) -> FastAPI:
-    # Creation de l'application et montage du dossier d'images et des templates
+    """Crée et configure l'application FastAPI pour la recherche d'images."""
+    # Creation de l'application et montage des images et des pages html
     app = FastAPI()
     app.mount("/images", StaticFiles(directory=image_dir), name="images")
     templates = Jinja2Templates(directory=Path(__file__).parent / "templates")
@@ -20,6 +21,7 @@ def create_app(embeddings_path: Path, image_dir: Path) -> FastAPI:
     # Page d'acceuil pour la recherche
     @app.get("/", response_class=HTMLResponse)
     def home(request: Request):
+        """Page d'accueil avec le formulaire de recherche."""
         return templates.TemplateResponse(
             request=request,
             name="home.html",
@@ -37,7 +39,7 @@ def create_app(embeddings_path: Path, image_dir: Path) -> FastAPI:
                         k: int,
                         t: float,
                         q: str=Query(..., description="Description de la recherche")):
-        
+        """Page d'affichage des résultats de la recherche."""
         results = searcher.search(q, top_k=k)
         results = [{"filename": Path(path).name, "score": score} for path, score in results]
 
