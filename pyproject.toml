@@ -19,7 +19,7 @@ dependencies = [
 ]
 
 [tool.ruff]
-src = ["app", "services"]
+src = ["src"]
 select = ["E", "F", "I"]
 ignore = ["E203"]
 line-length = 100
