@@ -2,9 +2,11 @@ import shutil
 from pathlib import Path
 
 import typer
+import uvicorn
 from tqdm import tqdm
 from typer import Argument, Option
 
+from .app import create_app
 from .compute_embeddings import compute_embeddings
 from .searcher import Searcher
 
@@ -12,8 +14,7 @@ app = typer.Typer()
 
 
 @app.command()
-def search(embeddings: Path = Argument(
-           ..., help="Fichier .pkl contenant les chemins vers les images et les embeddings"),
+def search(embeddings: Path = Argument(..., help="Fichier .pkl des embeddings"),
            query: str = Argument(..., help="Requête textuelle"),
            top_k: int = Option(5, help="Nombre de résultats à afficher")):
     """Recherche les images qui correspondent le plus à une description textuelle."""
@@ -46,3 +47,13 @@ def prepare_data(input_dir: Path = Argument(..., help="Répertoire d'entrée à 
     for image_path in tqdm(image_paths, desc="Flattening dataset"):
         output_path = output_dir / image_path.name
         shutil.copy2(image_path, output_path)
+
+
+@app.command()
+def ui(embeddings: Path = Argument(..., help="Fichier .pkl des embeddings"),
+       image_dir: Path = Argument(..., help="Répertoire contenant les images"),
+       host: str = Option("127.0.0.1", help="Adresse IP"),
+       port: int = Option(8000, help="Port")):
+    """Lance l'interface web de recherche d'images."""
+    app = create_app(embeddings_path=embeddings, image_dir=image_dir)
+    uvicorn.run(app, host=host, port=port)
