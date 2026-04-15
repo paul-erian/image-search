@@ -28,7 +28,6 @@ def create_app(embeddings_path: Path, image_dir: Path) -> FastAPI:
             context={
                 "request": request,
                 "k": 9,
-                "t": 0.20,
                 "git_url": "https://github.com/paul-erian/image-search/"
             }
         )
@@ -37,7 +36,6 @@ def create_app(embeddings_path: Path, image_dir: Path) -> FastAPI:
     @app.get("/search", response_class=HTMLResponse)
     def search_endpoint(request: Request,
                         k: int,
-                        t: float,
                         q: str=Query(..., description="Description de la recherche")):
         """Page d'affichage des résultats de la recherche."""
         results = searcher.search(q, top_k=k)
@@ -50,7 +48,6 @@ def create_app(embeddings_path: Path, image_dir: Path) -> FastAPI:
                 "request": request,
                 "q": q,
                 "k": k,
-                "t": t,
                 "git_url": "https://github.com/paul-erian/image-search/",
                 "results": results
             }
